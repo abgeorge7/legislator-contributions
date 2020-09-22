@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/legislator-contributions/static/css/main.5b322896.chunk.css",
+    "main.js": "/legislator-contributions/static/js/main.5846ef60.chunk.js",
+    "main.js.map": "/legislator-contributions/static/js/main.5846ef60.chunk.js.map",
+    "runtime-main.js": "/legislator-contributions/static/js/runtime-main.b2aea132.js",
+    "runtime-main.js.map": "/legislator-contributions/static/js/runtime-main.b2aea132.js.map",
+    "static/css/2.411bf881.chunk.css": "/legislator-contributions/static/css/2.411bf881.chunk.css",
+    "static/js/2.5d887c6e.chunk.js": "/legislator-contributions/static/js/2.5d887c6e.chunk.js",
+    "static/js/2.5d887c6e.chunk.js.map": "/legislator-contributions/static/js/2.5d887c6e.chunk.js.map",
+    "index.html": "/legislator-contributions/index.html",
+    "precache-manifest.200e6689b9670357f83a6f7fc889c5e1.js": "/legislator-contributions/precache-manifest.200e6689b9670357f83a6f7fc889c5e1.js",
+    "service-worker.js": "/legislator-contributions/service-worker.js",
+    "static/css/2.411bf881.chunk.css.map": "/legislator-contributions/static/css/2.411bf881.chunk.css.map",
+    "static/css/main.5b322896.chunk.css.map": "/legislator-contributions/static/css/main.5b322896.chunk.css.map",
+    "static/js/2.5d887c6e.chunk.js.LICENSE.txt": "/legislator-contributions/static/js/2.5d887c6e.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/legislator-contributions/static/media/outline-icons.ef60a4f6.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b2aea132.js",
+    "static/css/2.411bf881.chunk.css",
+    "static/js/2.5d887c6e.chunk.js",
+    "static/css/main.5b322896.chunk.css",
+    "static/js/main.5846ef60.chunk.js"
+  ]
+}
