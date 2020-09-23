@@ -80,43 +80,45 @@ class App extends React.Component {
               </h3>
               <ul>
                 {candidates.map(x => (
-                  <React.Fragment key={x.cid}>
-                    <Segment onClick={() => this.selectCandidate(x.cid)}>
-                      <h4>
-                        {x.firstlast}: {x.party}
-                      </h4>
-                      {selectedCandidate === x.cid ? (
-                        <React.Fragment>
-                          {loadingCandidateDetails ? (
-                            <Loader active>
-                              Fetching candidate information...
-                            </Loader>
-                          ) : (
-                            <Segment>
-                              <h5>Top contributors:</h5>
-                              <ul>
-                                {topContributors.map(x => (
-                                  <li key={x.org_name}>
-                                    {x.org_name}: $
-                                    {parseFloat(x.total).toLocaleString()}
-                                  </li>
-                                ))}
-                              </ul>
-                              <h5>Top industries:</h5>
-                              <ul>
-                                {topIndustries.map(x => (
-                                  <li key={x.industry_name}>
-                                    {x.industry_name}: $
-                                    {parseFloat(x.total).toLocaleString()}
-                                  </li>
-                                ))}
-                              </ul>
-                            </Segment>
-                          )}
-                        </React.Fragment>
-                      ) : null}
-                    </Segment>
-                  </React.Fragment>
+                  <Segment
+                    key={x.cid}
+                    className="candidate-details"
+                    onClick={() => this.selectCandidate(x.cid)}
+                  >
+                    <h4>
+                      {x.firstlast}: {x.party}
+                    </h4>
+                    {selectedCandidate === x.cid ? (
+                      <React.Fragment>
+                        {loadingCandidateDetails ? (
+                          <Loader active>
+                            Fetching candidate information...
+                          </Loader>
+                        ) : (
+                          <Segment>
+                            <h5>Top contributors:</h5>
+                            <ul>
+                              {topContributors.map(x => (
+                                <li key={x.org_name}>
+                                  {x.org_name}: $
+                                  {parseFloat(x.total).toLocaleString()}
+                                </li>
+                              ))}
+                            </ul>
+                            <h5>Top industries:</h5>
+                            <ul>
+                              {topIndustries.map(x => (
+                                <li key={x.industry_name}>
+                                  {x.industry_name}: $
+                                  {parseFloat(x.total).toLocaleString()}
+                                </li>
+                              ))}
+                            </ul>
+                          </Segment>
+                        )}
+                      </React.Fragment>
+                    ) : null}
+                  </Segment>
                 ))}
               </ul>
             </Segment>
