@@ -76,8 +76,7 @@ class App extends React.Component {
             <Segment>
               <h2>Legislators for {selectedState}</h2>
               <h3>
-                Click on a legislator to see who has contributed the most in
-                2020.
+                Click on a legislator to view their top contributors for 2020.
               </h3>
               <ul>
                 {candidates.map(x => (
@@ -87,18 +86,19 @@ class App extends React.Component {
                         {x.firstlast}: {x.party}
                       </h4>
                       {selectedCandidate === x.cid ? (
-                        <Segment>
+                        <React.Fragment>
                           {loadingCandidateDetails ? (
                             <Loader active>
                               Fetching candidate information...
                             </Loader>
                           ) : (
-                            <React.Fragment>
+                            <Segment>
                               <h5>Top contributors:</h5>
                               <ul>
                                 {topContributors.map(x => (
                                   <li key={x.org_name}>
-                                    {x.org_name}: ${x.total.toLocaleString()}
+                                    {x.org_name}: $
+                                    {parseFloat(x.total).toLocaleString()}
                                   </li>
                                 ))}
                               </ul>
@@ -107,13 +107,13 @@ class App extends React.Component {
                                 {topIndustries.map(x => (
                                   <li key={x.industry_name}>
                                     {x.industry_name}: $
-                                    {x.total.toLocaleString()}
+                                    {parseFloat(x.total).toLocaleString()}
                                   </li>
                                 ))}
                               </ul>
-                            </React.Fragment>
+                            </Segment>
                           )}
-                        </Segment>
+                        </React.Fragment>
                       ) : null}
                     </Segment>
                   </React.Fragment>
