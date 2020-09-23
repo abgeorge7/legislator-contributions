@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8bbb8f06bd0d9189da2ddf437eb5fbdc",
+    "revision": "6bea23dfae79be707361859e085fa6db",
     "url": "/legislator-contributions/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/legislator-contributions/static/css/2.411bf881.chunk.css"
   },
   {
-    "revision": "8eefbefbd826433f1062",
+    "revision": "c00155fa8c598b8e99a1",
     "url": "/legislator-contributions/static/css/main.5b322896.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/legislator-contributions/static/js/2.5d887c6e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "8eefbefbd826433f1062",
-    "url": "/legislator-contributions/static/js/main.5846ef60.chunk.js"
+    "revision": "c00155fa8c598b8e99a1",
+    "url": "/legislator-contributions/static/js/main.ad688cb8.chunk.js"
   },
   {
     "revision": "1ab3712145c69a1f59d6",
