@@ -5,7 +5,9 @@ import {
   Segment,
   Dimmer,
   Loader,
-  Icon
+  Icon,
+  Grid,
+  Image
 } from "semantic-ui-react";
 import {
   getTopContributors,
@@ -172,13 +174,29 @@ class App extends React.Component {
     return (
       <div className="app">
         <Container>
-          <h1>Legislator Contribution Lookup</h1>
-          <p>Select a state to view legislators.</p>
-          <Select
-            placeholder="Select your state"
-            options={states}
-            onChange={this.getCandidatesForState}
-          />
+          <Grid columns={2}>
+            <Grid.Column>
+              <h1>Legislator Contribution Lookup</h1>
+              <p>Select a state to view legislators.</p>
+              <Select
+                placeholder="Select your state"
+                options={states}
+                onChange={this.getCandidatesForState}
+              />
+            </Grid.Column>
+            <Grid.Column className="app__grid--right">
+              <a
+                href="https://www.opensecrets.org/elections/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="https://cdn1.opensecrets.org/rails-assets/production/assets/logos/opensecrets_databy250x88-3de03b11da477be7e81c2a2ef7b2dcdd0d44bad822f2d1e29aff6330676529ca.gif"
+                  alt="Powered by OpenSecrets.org"
+                />
+              </a>
+            </Grid.Column>
+          </Grid>
           {selectedState && !loading ? (
             <Segment>
               <h2>Legislators for {selectedState}</h2>
