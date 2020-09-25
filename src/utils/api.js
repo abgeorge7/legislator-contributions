@@ -48,3 +48,49 @@ export const getTopIndustries = async candidateId =>
           )
         : []
     );
+
+export const getTopSectors = async candidateId =>
+  await fetch(`${baseUrl}&method=candSector&cid=${candidateId}`)
+    .then(res => res.json())
+    .then(data =>
+      data &&
+      data.response &&
+      data.response.sectors &&
+      data.response.sectors.sector
+        ? data.response.sectors.sector.map(industry => industry["@attributes"])
+        : []
+    );
+
+export const getCandidateFinances = async candidateId =>
+  await fetch(`${baseUrl}&method=memPFDprofile&cid=${candidateId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.response && data.response.member_profile) {
+        let obj = {};
+        if (data.response.member_profile["@attributes"]) {
+          obj.attributes = data.response.member_profile["@attributes"];
+        }
+        if (
+          data.response.member_profile.assets &&
+          data.response.member_profile.assets.asset
+        ) {
+          obj.assets = data.response.member_profile.assets.asset.map(
+            x => x["@attributes"]
+          );
+        }
+        if (
+          data.response.member_profile.positions &&
+          data.response.member_profile.positions.position
+        ) {
+          obj.positions = data.response.member_profile.positions.position.map(
+            x => x["@attributes"]
+          );
+        }
+        return obj;
+      }
+      return null;
+    })
+    .catch(err => {
+      console.log("Error getting asset info for CID ", candidateId);
+      return null;
+    });

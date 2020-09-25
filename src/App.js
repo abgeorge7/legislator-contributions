@@ -11,7 +11,9 @@ import {
   getTopContributors,
   getCandidates,
   getTopIndustries,
-  getCandidateDetails
+  getCandidateDetails,
+  getCandidateFinances,
+  getTopSectors
 } from "./utils/api";
 import { states } from "./utils/constants";
 import "./App.css";
@@ -26,6 +28,7 @@ class App extends React.Component {
       selectedCandidate: null,
       topContributors: [],
       topIndustries: [],
+      topSectors: [],
       loadingCandidateDetails: false,
       sortDirection: "desc"
     };
@@ -65,6 +68,21 @@ class App extends React.Component {
             })
       )
     );
+    candidates = candidates.filter(x => x);
+    candidates = await Promise.all(
+      candidates.map(
+        async candidate =>
+          await getCandidateFinances(candidate.cid)
+            .then(finances => ({
+              ...candidate,
+              finances
+            }))
+            .catch(err => {
+              console.log("Error fetching info for CID ", candidate.cid);
+              return;
+            })
+      )
+    );
     candidates = candidates
       .filter(x => x)
       .sort(this.state.sortDirection === "asc" ? this.sortAsc : this.sortDesc);
@@ -84,9 +102,11 @@ class App extends React.Component {
       });
       const topContributors = await getTopContributors(id);
       const topIndustries = await getTopIndustries(id);
+      const topSectors = await getTopSectors(id);
       this.setState({
         topContributors,
         topIndustries,
+        topSectors,
         loadingCandidateDetails: false
       });
     }
@@ -146,6 +166,7 @@ class App extends React.Component {
       loadingCandidateDetails,
       topContributors,
       topIndustries,
+      topSectors,
       sortDirection
     } = this.state;
     return (
@@ -202,21 +223,77 @@ class App extends React.Component {
                             </Loader>
                           </Dimmer>
                         ) : (
-                          <Segment>
-                            <div className="candidate-details__header">
-                              <h5>
+                          <div className="candidate-details__section">
+                            <div className="candidate-details__finances">
+                              <h5>Campaign Contributions:</h5>
+                              <p>
                                 Total spent:{" "}
                                 {this.formatCurrency(x.details.spent)}
-                              </h5>
-                              <h5>
+                              </p>
+                              <p>
                                 Total cash on hand:{" "}
                                 {this.formatCurrency(x.details.cash_on_hand)}
-                              </h5>
-                              <h5>
+                              </p>
+                              <p>
                                 Total debt:{" "}
                                 {this.formatCurrency(x.details.debt)}
-                              </h5>
+                              </p>
                             </div>
+                            {x.finances ? (
+                              <div className="candidate-details__finances">
+                                <h5>
+                                  {x.finances.attributes &&
+                                  x.finances.attributes.data_year ? (
+                                    <React.Fragment>
+                                      {x.finances.attributes.data_year}{" "}
+                                    </React.Fragment>
+                                  ) : null}
+                                  Personal Finances
+                                </h5>
+                                {x.finances.attributes &&
+                                x.finances.attributes.net_low &&
+                                x.finances.attributes.net_high ? (
+                                  <p>
+                                    Net Worth:{" "}
+                                    {this.formatCurrency(
+                                      x.finances.attributes.net_low
+                                    )}{" "}
+                                    -{" "}
+                                    {this.formatCurrency(
+                                      x.finances.attributes.net_high
+                                    )}
+                                  </p>
+                                ) : null}
+                                {x.finances.attributes &&
+                                x.finances.attributes.asset_low &&
+                                x.finances.attributes.asset_high ? (
+                                  <p>
+                                    Asset Values:{" "}
+                                    {this.formatCurrency(
+                                      x.finances.attributes.asset_low
+                                    )}{" "}
+                                    -{" "}
+                                    {this.formatCurrency(
+                                      x.finances.attributes.asset_high
+                                    )}
+                                  </p>
+                                ) : null}
+                                {x.finances.positions &&
+                                x.finances.positions ? (
+                                  <React.Fragment>
+                                    <br />
+                                    <h5>Positions Held:</h5>
+                                    <ul>
+                                      {x.finances.positions.map(pos => (
+                                        <li>
+                                          {pos.title} @ {pos.organization}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </React.Fragment>
+                                ) : null}
+                              </div>
+                            ) : null}
                             <h5>Top contributors:</h5>
                             <ul>
                               {topContributors.map(x => (
@@ -234,7 +311,16 @@ class App extends React.Component {
                                 </li>
                               ))}
                             </ul>
-                          </Segment>
+                            <h5>Top sectors:</h5>
+                            <ul>
+                              {topSectors.map(x => (
+                                <li key={x.sector_name}>
+                                  {x.sector_name}:{" "}
+                                  {this.formatCurrency(x.total)}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         )}
                       </React.Fragment>
                     ) : null}
