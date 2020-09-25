@@ -24,5 +24,9 @@
 
 .app .candidate-details__header > * {
   margin: 0;
-  flex-basis: 33%;
+  flex-basis: 25%;
+}
+
+.green {
+  color: green;
 }

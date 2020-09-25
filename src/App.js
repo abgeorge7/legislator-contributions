@@ -54,15 +54,20 @@ class App extends React.Component {
     candidates = await Promise.all(
       candidates.map(
         async candidate =>
-          await getCandidateDetails(candidate.cid).then(details => ({
-            ...candidate,
-            details
-          }))
+          await getCandidateDetails(candidate.cid)
+            .then(details => ({
+              ...candidate,
+              details
+            }))
+            .catch(err => {
+              console.log("Error fetching info for CID ", candidate.cid);
+              return;
+            })
       )
     );
-    candidates = candidates.sort(
-      this.state.sortDirection === "asc" ? this.sortAsc : this.sortDesc
-    );
+    candidates = candidates
+      .filter(x => x)
+      .sort(this.state.sortDirection === "asc" ? this.sortAsc : this.sortDesc);
     this.setState({
       candidates,
       loading: false
@@ -98,7 +103,7 @@ class App extends React.Component {
       case "L":
         return "Libertarian";
       default:
-        return "Unknown";
+        return str;
     }
   };
 
@@ -109,7 +114,7 @@ class App extends React.Component {
       case "S":
         return "Senate";
       default:
-        return "Other";
+        return str;
     }
   };
 
@@ -125,6 +130,12 @@ class App extends React.Component {
       sortDirection: newSortDirection
     });
   };
+
+  formatCurrency = amount =>
+    `$${parseFloat(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
 
   render() {
     const {
@@ -175,9 +186,12 @@ class App extends React.Component {
                       <h4>{x.firstlast}</h4>
                       <h4>{this.getParty(x.details.party)}</h4>
                       <h4>{this.getChamber(x.details.chamber)}</h4>
-                      <h4>
-                        Total: ${parseFloat(x.details.total).toLocaleString()}
-                      </h4>
+                      <h4>Total: {this.formatCurrency(x.details.total)}</h4>
+                      {x.details.next_election === "2020" ? (
+                        <h4 className="green">Election Year</h4>
+                      ) : (
+                        <div />
+                      )}
                     </div>
                     {selectedCandidate === x.cid ? (
                       <React.Fragment>
@@ -191,26 +205,23 @@ class App extends React.Component {
                           <Segment>
                             <div className="candidate-details__header">
                               <h5>
-                                Total spent: $
-                                {parseFloat(x.details.spent).toLocaleString()}
+                                Total spent:{" "}
+                                {this.formatCurrency(x.details.spent)}
                               </h5>
                               <h5>
-                                Total cash on hand: $
-                                {parseFloat(
-                                  x.details.cash_on_hand
-                                ).toLocaleString()}
+                                Total cash on hand:{" "}
+                                {this.formatCurrency(x.details.cash_on_hand)}
                               </h5>
                               <h5>
-                                Total debt: $
-                                {parseFloat(x.details.debt).toLocaleString()}
+                                Total debt:{" "}
+                                {this.formatCurrency(x.details.debt)}
                               </h5>
                             </div>
                             <h5>Top contributors:</h5>
                             <ul>
                               {topContributors.map(x => (
                                 <li key={x.org_name}>
-                                  {x.org_name}: $
-                                  {parseFloat(x.total).toLocaleString()}
+                                  {x.org_name}: {this.formatCurrency(x.total)}
                                 </li>
                               ))}
                             </ul>
@@ -218,8 +229,8 @@ class App extends React.Component {
                             <ul>
                               {topIndustries.map(x => (
                                 <li key={x.industry_name}>
-                                  {x.industry_name}: $
-                                  {parseFloat(x.total).toLocaleString()}
+                                  {x.industry_name}:{" "}
+                                  {this.formatCurrency(x.total)}
                                 </li>
                               ))}
                             </ul>
