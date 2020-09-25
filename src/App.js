@@ -1,5 +1,12 @@
 import React from "react";
-import { Container, Select, Segment, Dimmer, Loader } from "semantic-ui-react";
+import {
+  Container,
+  Select,
+  Segment,
+  Dimmer,
+  Loader,
+  Icon
+} from "semantic-ui-react";
 import {
   getTopContributors,
   getCandidates,
@@ -19,9 +26,24 @@ class App extends React.Component {
       selectedCandidate: null,
       topContributors: [],
       topIndustries: [],
-      loadingCandidateDetails: false
+      loadingCandidateDetails: false,
+      sortDirection: "desc"
     };
   }
+
+  sortAsc = (a, b) =>
+    parseFloat(a.details.total) > parseFloat(b.details.total)
+      ? 1
+      : parseFloat(b.details.total) > parseFloat(a.details.total)
+      ? -1
+      : 0;
+
+  sortDesc = (a, b) =>
+    parseFloat(a.details.total) > parseFloat(b.details.total)
+      ? -1
+      : parseFloat(b.details.total) > parseFloat(a.details.total)
+      ? 1
+      : 0;
 
   getCandidatesForState = async (e, data) => {
     this.setState({
@@ -37,6 +59,9 @@ class App extends React.Component {
             details
           }))
       )
+    );
+    candidates = candidates.sort(
+      this.state.sortDirection === "asc" ? this.sortAsc : this.sortDesc
     );
     this.setState({
       candidates,
@@ -88,6 +113,19 @@ class App extends React.Component {
     }
   };
 
+  sortTable = () => {
+    const { sortDirection, candidates } = this.state;
+    let newCandidates = candidates.reverse();
+    let newSortDirection = "asc";
+    if (sortDirection === "asc") {
+      newSortDirection = "desc";
+    }
+    this.setState({
+      candidates: newCandidates,
+      sortDirection: newSortDirection
+    });
+  };
+
   render() {
     const {
       selectedState,
@@ -96,7 +134,8 @@ class App extends React.Component {
       selectedCandidate,
       loadingCandidateDetails,
       topContributors,
-      topIndustries
+      topIndustries,
+      sortDirection
     } = this.state;
     return (
       <div className="app">
@@ -111,9 +150,20 @@ class App extends React.Component {
           {selectedState && !loading ? (
             <Segment>
               <h2>Legislators for {selectedState}</h2>
-              <h3>
-                Click on a legislator to view their top contributors for 2020.
-              </h3>
+              <div className="candidate-table">
+                <h3>
+                  Click on a legislator to view their top contributors for 2020.
+                </h3>
+                <Icon
+                  name={
+                    sortDirection === "asc"
+                      ? "sort amount down"
+                      : "sort amount up"
+                  }
+                  size="large"
+                  onClick={this.sortTable}
+                />
+              </div>
               <ul>
                 {candidates.map(x => (
                   <Segment

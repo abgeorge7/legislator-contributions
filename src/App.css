@@ -2,6 +2,16 @@
   margin: 20px 0;
 }
 
+.app .candidate-table {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px;
+}
+
+.app .icon {
+  cursor: pointer;
+}
+
 .app .candidate-details {
   cursor: pointer;
   width: 100%;
