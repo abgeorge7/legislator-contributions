@@ -23,6 +23,18 @@ export const getCandidates = async stateId =>
         : []
     );
 
+export const getCandidateDetails = async candidateId =>
+  await fetch(`${baseUrl}&method=candSummary&cid=${candidateId}`)
+    .then(res => res.json())
+    .then(data =>
+      data &&
+      data.response &&
+      data.response.summary &&
+      data.response.summary["@attributes"]
+        ? data.response && data.response.summary["@attributes"]
+        : []
+    );
+
 export const getTopIndustries = async candidateId =>
   await fetch(`${baseUrl}&method=candIndustry&cid=${candidateId}`)
     .then(res => res.json())

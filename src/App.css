@@ -4,4 +4,15 @@
 
 .app .candidate-details {
   cursor: pointer;
+  width: 100%;
+}
+
+.app .candidate-details__header {
+  display: flex;
+  align-items: center;
+}
+
+.app .candidate-details__header > * {
+  margin: 0;
+  flex-basis: 33%;
 }

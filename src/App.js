@@ -1,9 +1,10 @@
 import React from "react";
-import { Container, Select, Segment, Loader } from "semantic-ui-react";
+import { Container, Select, Segment, Dimmer, Loader } from "semantic-ui-react";
 import {
   getTopContributors,
   getCandidates,
-  getTopIndustries
+  getTopIndustries,
+  getCandidateDetails
 } from "./utils/api";
 import { states } from "./utils/constants";
 import "./App.css";
@@ -27,7 +28,16 @@ class App extends React.Component {
       loading: true,
       selectedState: data.value
     });
-    const candidates = await getCandidates(data.value);
+    let candidates = await getCandidates(data.value);
+    candidates = await Promise.all(
+      candidates.map(
+        async candidate =>
+          await getCandidateDetails(candidate.cid).then(details => ({
+            ...candidate,
+            details
+          }))
+      )
+    );
     this.setState({
       candidates,
       loading: false
@@ -49,6 +59,32 @@ class App extends React.Component {
         topIndustries,
         loadingCandidateDetails: false
       });
+    }
+  };
+
+  getParty = str => {
+    switch (str) {
+      case "D":
+        return "Democrat";
+      case "R":
+        return "Republican";
+      case "3":
+        return "Third Party";
+      case "L":
+        return "Libertarian";
+      default:
+        return "Unknown";
+    }
+  };
+
+  getChamber = str => {
+    switch (str) {
+      case "H":
+        return "House";
+      case "S":
+        return "Senate";
+      default:
+        return "Other";
     }
   };
 
@@ -85,17 +121,40 @@ class App extends React.Component {
                     className="candidate-details"
                     onClick={() => this.selectCandidate(x.cid)}
                   >
-                    <h4>
-                      {x.firstlast}: {x.party}
-                    </h4>
+                    <div className="candidate-details__header">
+                      <h4>{x.firstlast}</h4>
+                      <h4>{this.getParty(x.details.party)}</h4>
+                      <h4>{this.getChamber(x.details.chamber)}</h4>
+                      <h4>
+                        Total: ${parseFloat(x.details.total).toLocaleString()}
+                      </h4>
+                    </div>
                     {selectedCandidate === x.cid ? (
                       <React.Fragment>
                         {loadingCandidateDetails ? (
-                          <Loader active>
-                            Fetching candidate information...
-                          </Loader>
+                          <Dimmer active inverted>
+                            <Loader active>
+                              Fetching candidate information...
+                            </Loader>
+                          </Dimmer>
                         ) : (
                           <Segment>
+                            <div className="candidate-details__header">
+                              <h5>
+                                Total spent: $
+                                {parseFloat(x.details.spent).toLocaleString()}
+                              </h5>
+                              <h5>
+                                Total cash on hand: $
+                                {parseFloat(
+                                  x.details.cash_on_hand
+                                ).toLocaleString()}
+                              </h5>
+                              <h5>
+                                Total debt: $
+                                {parseFloat(x.details.debt).toLocaleString()}
+                              </h5>
+                            </div>
                             <h5>Top contributors:</h5>
                             <ul>
                               {topContributors.map(x => (
@@ -124,7 +183,9 @@ class App extends React.Component {
             </Segment>
           ) : null}
           {selectedState && loading ? (
-            <Loader active>Loading information for {selectedState}...</Loader>
+            <Dimmer active inverted>
+              <Loader active>Loading information for {selectedState}...</Loader>
+            </Dimmer>
           ) : null}
         </Container>
       </div>
