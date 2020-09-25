@@ -7,10 +7,14 @@ export const getTopContributors = async candidateId =>
       data &&
       data.response &&
       data.response.contributors &&
-      data.response.contributors.contributor
-        ? data.response.contributors.contributor.map(
-            contributor => contributor["@attributes"]
-          )
+      data.response.contributors.contributor &&
+      data.response.contributors["@attributes"]
+        ? {
+            notice: data.response.contributors["@attributes"].notice,
+            contributors: data.response.contributors.contributor.map(
+              contributor => contributor["@attributes"]
+            )
+          }
         : []
     );
 

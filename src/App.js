@@ -28,7 +28,7 @@ class App extends React.Component {
       candidates: [],
       loading: false,
       selectedCandidate: null,
-      topContributors: [],
+      topContributors: {},
       topIndustries: [],
       topSectors: [],
       loadingCandidateDetails: false,
@@ -313,8 +313,11 @@ class App extends React.Component {
                               </div>
                             ) : null}
                             <h5>Top contributors:</h5>
+                            <p>
+                              <i>Note: {topContributors.notice}</i>
+                            </p>
                             <ul>
-                              {topContributors.map(x => (
+                              {topContributors.contributors.map(x => (
                                 <li key={x.org_name}>
                                   {x.org_name}: {this.formatCurrency(x.total)}
                                 </li>
@@ -345,6 +348,7 @@ class App extends React.Component {
                   </Segment>
                 ))}
               </ul>
+              <p>Source: OpenSecrets.org</p>
             </Segment>
           ) : null}
           {selectedState && loading ? (
