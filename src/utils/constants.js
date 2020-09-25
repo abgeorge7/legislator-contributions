@@ -3,5 +3,6 @@ export const states = [
   { key: "CA", value: "CA", text: "California" },
   { key: "IL", value: "IL", text: "Illinois" },
   { key: "MI", value: "MI", text: "Michigan" },
-  { key: "MN", value: "MN", text: "Minnesota" }
+  { key: "MN", value: "MN", text: "Minnesota" },
+  { key: "PA", value: "PA", text: "Pennsylvania" }
 ];
